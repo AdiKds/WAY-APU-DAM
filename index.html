@@ -78,9 +78,120 @@
         #fullscreenMapControls:hover { transform: translateY(0); }
         .bar-chart-value { transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
         [title] { cursor: help; }
+
+        @keyframes pulseWave {
+            0% { stroke-width: 3; stroke-opacity: 1; fill-opacity: 0.4; r: 6px; }
+            100% { stroke-width: 1; stroke-opacity: 0; fill-opacity: 0; r: 50px; }
+        }
+        .pulse-epicenter { animation: pulseWave 2s infinite cubic-bezier(0.1, 0.8, 0.3, 1); }
+
+        /* --- STYLES UNTUK HOLOGRAPHIC SCREENSAVER --- */
+        #hologramScreensaver {
+            transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
+            background: radial-gradient(circle at center, #020c1b 0%, #000205 100%);
+        }
+        
+        /* Efek Scanline Glitch Grid */
+        .holo-grid {
+            background-size: 40px 40px;
+            background-image: linear-gradient(to right, rgba(6, 182, 212, 0.04) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(6, 182, 212, 0.04) 1px, transparent 1px);
+        }
+        
+        /* Animasi Glitch Teks */
+        @keyframes holoGlitch {
+            0% { text-shadow: 2px 0 0 rgba(255,0,0,0.3), -2px 0 0 rgba(0,255,255,0.3); }
+            50% { text-shadow: -2px 0 0 rgba(255,0,0,0.3), 2px 0 0 rgba(0,255,255,0.3); }
+            100% { text-shadow: 2px 0 0 rgba(255,0,0,0.3), -2px 0 0 rgba(0,255,255,0.3); }
+        }
+        .holo-text-glow {
+            text-shadow: 0 0 20px rgba(34, 211, 238, 0.6);
+            animation: holoGlitch 3s infinite linear;
+        }
+
+        /* Kerangka Animasi Robot Humanoid */
+        .robot-container {
+            perspective: 1000px;
+            filter: drop-shadow(0 0 25px rgba(6, 182, 212, 0.6));
+        }
+        
+        @keyframes robotFloat {
+            0% { transform: translateY(0px) rotateX(5deg); }
+            50% { transform: translateY(-15px) rotateX(10deg); }
+            100% { transform: translateY(0px) rotateX(5deg); }
+        }
+        .robot-body-mesh {
+            animation: robotFloat 4s infinite ease-in-out;
+            transform-style: preserve-3d;
+        }
+
+        /* Denyut Cincin Data Informasi Ring */
+        @keyframes spinDataRing {
+            0% { transform: rotate(0deg); opacity: 0.4; }
+            50% { opacity: 0.8; }
+            100% { transform: rotate(360deg); opacity: 0.4; }
+        }
+        .data-ring-1 { animation: spinDataRing 12s linear infinite; }
+        .data-ring-2 { animation: spinDataRing 20s linear infinite reverse; }
     </style>
 </head>
 <body id="appBody" class="theme-dark bg-[var(--bg-main)] text-[var(--text-main)] p-4 min-h-screen flex flex-col justify-between overflow-x-hidden relative">
+
+    <div id="hologramScreensaver" class="hidden fixed inset-0 z-[999] w-screen h-screen flex flex-col items-center justify-center p-6 select-none opacity-0 visibility-hidden">
+        <div class="absolute inset-0 holo-grid pointer-events-none"></div>
+        
+        <div class="absolute top-6 left-6 font-mono text-[10px] text-cyan-400/60 tracking-widest uppercase flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-cyan-500 animate-ping"></span>
+            SYSTEM IDLE MODE // CORE ASSISTANT ONLINE
+        </div>
+        
+        <div class="z-10 flex flex-col items-center justify-center max-w-4xl w-full">
+            
+            <div id="screensaverDate" class="font-tech text-base md:text-xl font-bold text-cyan-400 tracking-[0.3em] uppercase mb-2 text-center drop-shadow-md">
+                SABTU, 06 JUNI 2026
+            </div>
+            
+            <div id="screensaverTime" class="font-tech text-6xl md:text-8xl font-black text-transparent bg-clip-text bg-gradient-to-b from-cyan-300 via-cyan-400 to-indigo-500 tracking-wider text-center holo-text-glow mb-8">
+                00:00:00
+            </div>
+
+            <div class="robot-container relative w-64 h-64 md:w-80 md:h-80 flex items-center justify-center">
+                
+                <div class="data-ring-1 absolute w-full h-full border-4 border-dashed border-cyan-500/30 rounded-full scale-110"></div>
+                <div class="data-ring-2 absolute w-full h-full border border-double border-indigo-500/20 rounded-full scale-125"></div>
+                <div class="absolute w-4/5 h-4/5 border border-cyan-400/40 rounded-full animate-pulse"></div>
+
+                <div class="robot-body-mesh relative w-48 h-48 md:w-60 md:h-60 flex items-center justify-center">
+                    <svg viewBox="0 0 200 200" class="w-full h-full text-cyan-400 fill-current drop-shadow-[0_0_15px_rgba(34,211,238,0.8)]">
+                        <path d="M75,40 C75,25 125,25 125,40 L120,65 C120,70 80,70 80,65 Z" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/>
+                        <rect x="83" y="47" width="34" height="6" rx="3" fill="#ffffff" class="animate-pulse"/>
+                        <line x1="100" y1="27" x2="100" y2="15" stroke="currentColor" stroke-width="2.5" stroke-dasharray="2,2"/>
+                        <circle cx="100" cy="12" r="3" fill="#22d3ee" class="animate-ping"/>
+                        
+                        <rect x="94" y="68" width="12" height="10" fill="none" stroke="currentColor" stroke-width="2"/>
+                        <line x1="94" y1="73" x2="106" y2="73" stroke="currentColor" stroke-width="1.5"/>
+
+                        <path d="M60,82 L140,82 L130,140 L70,140 Z" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/>
+                        <circle cx="100" cy="108" r="14" fill="none" stroke="#fbbf24" stroke-width="2" class="animate-pulse"/>
+                        <circle cx="100" cy="108" r="7" fill="#22d3ee"/>
+                        <line x1="70" y1="92" x2="90" y2="92" stroke="currentColor" stroke-width="1.5"/>
+                        <line x1="130" y1="92" x2="110" y2="92" stroke="currentColor" stroke-width="1.5"/>
+                        <line x1="80" y1="125" x2="120" y2="125" stroke="currentColor" stroke-width="1.5"/>
+
+                        <circle cx="50" cy="90" r="6" fill="none" stroke="currentColor" stroke-width="2"/>
+                        <path d="M48,96 L40,125 L45,150" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <circle cx="150" cy="90" r="6" fill="none" stroke="currentColor" stroke-width="2"/>
+                        <path d="M152,96 L160,125 L155,150" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </div>
+                
+                <div class="absolute bottom-[-45px] bg-slate-950/80 border border-cyan-500/50 px-4 py-1.5 rounded-md text-center font-mono text-[10px] text-cyan-300 tracking-wider font-bold">
+                    [ TAP / MOVE MOUSE TO AWAKEN SYSTEM ]
+                </div>
+            </div>
+
+        </div>
+    </div>
 
     <div id="visualSirenBanner" class="hidden fixed top-0 left-0 right-0 z-[200] bg-red-600 text-white text-center font-tech font-bold py-2.5 uppercase tracking-widest animate-pulse shadow-lg">
         ⚠️ ALERT CRITICAL: AUTOMATIC WARNING SYSTEM (AWS) ALARM SIRINE AKTIF ⚠️
@@ -188,21 +299,13 @@
                     </div>
 
                     <div class="mt-4 pt-3 border-t border-[var(--border-color)]">
-                        <div class="flex gap-2 font-mono text-[10px] font-black mb-2">
-                            <button type="button" onclick="toggleFloatingWidget('live')" class="flex-1 px-2 py-1.5 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-slate-950 flex items-center justify-center gap-1 transition-all uppercase">
-                                <i class="fa-solid fa-wave-square"></i> Data BMKG Live
+                        <div class="flex gap-2.5 font-tech text-xs font-black mb-1">
+                            <button type="button" onclick="toggleFloatingContainerWidget('bmkgLiveWidget')" class="flex-1 px-3 py-2.5 rounded-xl bg-slate-900 border-2 border-cyan-500 hover:bg-cyan-950/40 text-white flex items-center justify-center gap-2 transition-all uppercase tracking-wider cursor-pointer shadow-md">
+                                <i class="fa-solid fa-tower-broadcast text-cyan-400 animate-pulse text-sm"></i> Data BMKG Live
                             </button>
-                            <button type="button" onclick="toggleFloatingWidget('history')" class="flex-1 px-2 py-1.5 rounded-lg bg-amber-600 hover:bg-amber-500 text-slate-950 flex items-center justify-center gap-1 transition-all uppercase">
-                                <i class="fa-solid fa-clock-rotate-left"></i> Arsip Sejarah
+                            <button type="button" onclick="toggleFloatingContainerWidget('sejarahGempaWidget')" class="flex-1 px-3 py-2.5 rounded-xl bg-slate-900 border-2 border-amber-500 hover:bg-amber-950/40 text-white flex items-center justify-center gap-2 transition-all uppercase tracking-wider cursor-pointer shadow-md">
+                                <i class="fa-solid fa-clock-rotate-left text-amber-400 text-sm"></i> Arsip Sejarah
                             </button>
-                        </div>
-
-                        <div id="floatingMalukuEarthquakeWidget" class="bg-slate-950 p-2.5 rounded-xl border border-cyan-500/50 font-mono text-[11px] h-36 overflow-y-auto hidden shadow-2xl">
-                            <div class="flex justify-between items-center border-b border-slate-800 pb-1 mb-1.5">
-                                <span id="floatingWidgetTitle" class="text-[9px] text-cyan-400 font-bold uppercase tracking-wider">BMKG REAL-TIME SEISMIC FEED</span>
-                                <button type="button" onclick="closeFloatingWidget()" class="text-slate-400 hover:text-rose-500 text-[10px]"><i class="fa-solid fa-xmark"></i></button>
-                            </div>
-                            <div id="floatingWidgetContent" class="space-y-1.5 text-slate-300"></div>
                         </div>
                     </div>
                 </div>
@@ -225,7 +328,7 @@
                          </button>
                          <div class="flex rounded-lg bg-[var(--panel-inner)] p-0.5 border border-[var(--border-color)] text-xs font-mono font-black">
                              <button onclick="toggleMapWeatherFlip('map')" id="btnViewMap" class="px-2.5 py-1.5 rounded bg-cyan-600 text-white transition-all shadow-md">PETA GIS</button>
-                             <button onclick="toggleMapWeatherFlip('weather')" id="btnViewWeather" class="px-2.5 py-1.5 rounded text-[var(--text-muted)] transition-all">RADAR CUACA</button>
+                             <button onclick="toggleMapWeatherFlip('weather')" id="btnViewWeather" class="px-2.5 py-1.5 rounded text-[var(--text-muted)] transition-all">RADAR LAUT</button>
                          </div>
                      </div>
                 </div>
@@ -247,7 +350,7 @@
                           <div class="flip-back bg-[var(--bg-card)] p-3 rounded-2xl border border-[var(--border-color)] glow-border flex flex-col">
                                <div class="mb-1.5">
                                    <span class="font-mono text-[11px] font-bold text-[var(--text-muted)] flex items-center gap-2"><i class="fa-solid fa-cloud-bolt text-[var(--accent-amber)]"></i> Radar Cuaca Satelit Real-time</span>
-                                font-mono        </div>
+                                </div>
                                <div class="w-full rounded-xl overflow-hidden border border-[var(--border-color)] relative z-10 bg-[var(--panel-inner)] flex-1">
                                    
                                    <div class="absolute top-4 left-4 z-20 pointer-events-none">
@@ -279,14 +382,17 @@
                     </h2>
                     
                     <div class="p-3 bg-[#020813] rounded-xl border-2 border-slate-800 font-mono text-xs space-y-4 mb-3 relative shadow-[0_0_15px_rgba(239,68,68,0.1)]">
-                        <span class="text-[9px] text-rose-500 font-bold block uppercase tracking-widest"><i class="fa-solid fa-bullseye animate-pulse"></i> Waspada Tektonik (MALUKU / NKRI)</span>
+                        <div class="flex justify-between items-center">
+                            <span class="text-[9px] text-rose-500 font-bold block uppercase tracking-widest animate-pulse"><i class="fa-solid fa-bullseye"></i> Waspada Tektonik (BMKG LIVE AUTOMATIC)</span>
+                            <span id="liveApiTimer" class="text-[10px] bg-cyan-950 border border-cyan-800 text-cyan-400 font-bold font-mono px-1.5 py-0.5 rounded">60s</span>
+                        </div>
                         
                         <div class="flex justify-between items-start gap-2">
                             <div id="eqLocation" class="text-amber-400 font-bold leading-snug text-[11px] uppercase tracking-wide">
-                                Pusat gempa berada di laut 70 km timur laut Pulau Puah
+                                Mendeteksi pusat aktivitas seismik BMKG...
                             </div>
                             <div class="bg-[#d97706]/10 border-2 border-amber-500 px-2.5 py-1 rounded-lg text-center shrink-0 min-w-[45px]">
-                                <div id="eqMag" class="text-amber-500 font-tech font-black text-base">5.6</div>
+                                <div id="eqMag" class="text-amber-500 font-tech font-black text-base">-</div>
                                 <div class="text-[8px] text-slate-400 font-bold font-tech">SR</div>
                             </div>
                         </div>
@@ -294,21 +400,21 @@
                         <div class="border-t border-slate-800/80 pt-2.5 space-y-2 text-[11px]">
                             <div class="flex justify-between">
                                 <span class="text-slate-400">Waktu Gempa:</span>
-                                <span id="eqTime" class="text-white font-bold">05 Jun 2026 | 06:28:33 WIB</span>
+                                <span id="eqTime" class="text-white font-bold">-</span>
                             </div>
                             <div class="flex justify-between">
                                 <span class="text-slate-400">Kedalaman:</span>
-                                <span class="text-white font-bold"><span id="eqDepth">91</span> km</span>
+                                <span class="text-white font-bold"><span id="eqDepth">-</span> km</span>
                             </div>
                             <div class="flex justify-between">
                                 <span class="text-slate-400">Koordinat:</span>
-                                <span id="eqCoords" class="text-white font-bold">-0.18, 123.13</span>
+                                <span id="eqCoords" class="text-white font-bold">-</span>
                             </div>
                         </div>
 
                         <div class="border-t border-slate-800/80 pt-2 text-[11px]">
                             <span class="text-amber-500 font-bold">Potensi:</span>
-                            <span id="eqPotensi" class="text-slate-300 ml-1">Gempa ini dirasakan untuk diteruskan pada masyarakat</span>
+                            <span id="eqPotensi" class="text-slate-300 ml-1">-</span>
                         </div>
                     </div>
 
@@ -414,6 +520,31 @@
         </section>
     </div>
 
+    <div id="bmkgLiveWidget" class="fixed bottom-24 left-6 w-[390px] md:w-[460px] bg-[#091124] border-2 border-[#00f0ff] rounded-2xl flex flex-col shadow-[0_0_30px_rgba(0,240,255,0.35)] z-[130] overflow-hidden hidden transition-transform duration-300">
+        <div class="bg-[#040a17] p-4 border-b border-[#00f0ff]/40 flex justify-between items-center select-none">
+            <div class="flex items-center gap-2">
+                <i class="fa-solid fa-circle-nodes text-[#00f0ff] animate-pulse text-sm"></i>
+                <h4 class="font-tech text-xs md:text-sm font-black text-[#00f0ff] tracking-wider uppercase">BMKG SEISMIC REGIONAL REAL-TIME (M 5.0+)</h4>
+            </div>
+            <button onclick="toggleFloatingContainerWidget('bmkgLiveWidget')" class="text-slate-400 hover:text-rose-500 p-1 cursor-pointer transition-colors"><i class="fa-solid fa-xmark text-lg"></i></button>
+        </div>
+        <div class="p-4 space-y-3.5 font-mono max-h-[340px] overflow-y-auto bg-slate-950" id="bmkgFeedContainer">
+            <div class="text-slate-400 text-center py-4 font-bold animate-pulse text-xs">Menghubungkan asimilasi jaringan InaTEWS BMKG...</div>
+        </div>
+    </div>
+
+    <div id="sejarahGempaWidget" class="fixed bottom-24 left-6 w-[390px] md:w-[480px] bg-[#091124] border-2 border-[#f59e0b] rounded-2xl flex flex-col shadow-[0_0_30px_rgba(245,158,11,0.35)] z-[130] overflow-hidden hidden transition-transform duration-300">
+        <div class="bg-[#040a17] p-4 border-b border-[#f59e0b]/40 flex justify-between items-center select-none">
+            <div class="flex items-center gap-2">
+                <i class="fa-solid fa-book-archive text-[#f59e0b] text-sm"></i>
+                <h4 class="font-tech text-xs md:text-sm font-black text-[#f59e0b] tracking-wider uppercase">KATALOG HISTORIS SEISMIK MALUKU & NASIONAL</h4>
+            </div>
+            <button onclick="toggleFloatingContainerWidget('sejarahGempaWidget')" class="text-slate-400 hover:text-rose-500 p-1 cursor-pointer transition-colors"><i class="fa-solid fa-xmark text-lg"></i></button>
+        </div>
+        <div class="p-4 space-y-3.5 font-mono max-h-[340px] overflow-y-auto bg-slate-950" id="historicalFeedContainer">
+            </div>
+    </div>
+
     <div id="gisFullScreenWrapper" class="hidden fixed inset-0 z-[100] bg-slate-950 w-screen h-screen">
         <div id="fullscreenMapControls" class="absolute top-0 inset-x-0 z-[1000] p-4 bg-slate-900/95 backdrop-blur-md border-b-2 border-cyan-500 shadow-2xl flex flex-col lg:flex-row justify-between items-center gap-3">
             <div class="flex items-center gap-3 shrink-0">
@@ -430,7 +561,7 @@
             <div class="flex flex-wrap items-center gap-3 shrink-0">
                 <div class="flex rounded-lg bg-slate-950 p-1 border border-indigo-500/50 text-xs font-mono font-black mr-2">
                     <button onclick="switchFullScreenViewMode('map')" id="fsViewBtn-map" class="px-3 py-1.5 rounded bg-indigo-600 text-white transition-all shadow-md">PETA GIS</button>
-                    <button onclick="switchFullScreenViewMode('weather')" id="fsViewBtn-weather" class="px-3 py-1.5 rounded text-slate-400 transition-all">RADAR CUACA</button>
+                    <button onclick="switchFullScreenViewMode('weather')" id="fsViewBtn-weather" class="px-3 py-1.5 rounded text-slate-400 transition-all">RADAR LAUT</button>
                 </div>
 
                 <div id="fsBasemapControlsGroup" class="flex rounded-lg bg-slate-950 p-1 border border-cyan-500/40 text-xs font-mono font-black">
@@ -451,16 +582,6 @@
         
         <div id="fullScreenMapContainer" class="w-full h-full z-10"></div>
         <div id="fullScreenWeatherContainer" class="w-full h-full z-10 hidden bg-slate-950 relative">
-            
-            <div class="absolute top-24 left-6 z-50 pointer-events-none">
-                <div class="bg-slate-950/95 backdrop-blur-md border-2 border-amber-500 p-3 rounded-xl shadow-2xl">
-                    <div class="font-tech text-xs font-black text-amber-400 tracking-wider flex items-center gap-2 mb-0.5">
-                        <i class="fa-solid fa-tower-broadcast animate-pulse"></i> BENDUNGAN WAY APU
-                    </div>
-                    <div class="font-mono text-[10px] text-white">S: 3°33'14.49" &nbsp;|&nbsp; E: 126°50'23.76"</div>
-                </div>
-            </div>
-
             <iframe id="fullscreenWeatherIframe" width="100%" height="100%" src="" frameborder="0"></iframe>
         </div>
     </div>
@@ -477,8 +598,8 @@
             </div>
             <div id="chatMessagesBox" class="flex-1 p-3 overflow-y-auto space-y-3.5 bg-slate-950">
                 <div class="bg-[var(--bg-card)] p-3 rounded-xl border border-[var(--border-color)] leading-relaxed font-sans font-medium">
-                    <span class="text-[var(--accent-cyan)] font-black block mb-1 font-mono uppercase text-[9px]"><i class="fa-solid fa-terminal mr-1"></i>System Initializer:</span>
-                    Halo terminal <strong id="systemUserName" class="text-emerald-400">STATION_NODE_AUTO</strong>. Saya asisten intel siber O&P Bendungan Way Apu. Ajukan analisis curah hujan atau visualisasi spasial Windy.
+                    <span class="text-[var(--accent-cyan)] font-mono font-black block mb-1 font-mono uppercase text-[9px]"><i class="fa-solid fa-terminal mr-1"></i>System Initializer:</span>
+                    Halo terminal <strong id="systemUserName" class="text-emerald-400 font-bold">[Inisial Identifikasi Otomatis]</strong>. Saya asisten intel siber O&P Bendungan Way Apu. Ajukan analisis curah hujan atau visualisasi spasial Windy.
                 </div>
             </div>
             <div class="p-2.5 bg-[var(--bg-card)] border-t border-[var(--border-color)] flex gap-2">
@@ -489,9 +610,9 @@
     </div>
 
     <div id="helpSystemModal" class="hidden fixed inset-0 z-[100] bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="bg-[var(--bg-card)] border-2 border-[var(--accent-emerald)] rounded-2xl max-w-lg w-full p-5 text-[var(--text-main)] shadow-2xl max-h-[85vh] overflow-y-auto">
+        <div class="bg-[var(--bg-card)] border-2 border-emerald-500 rounded-2xl max-w-lg w-full p-5 text-[var(--text-main)] shadow-2xl max-h-[85vh] overflow-y-auto">
             <div class="flex justify-between items-center border-b border-[var(--border-color)] pb-2 mb-3">
-                <h3 class="font-tech text-sm font-black text-[var(--accent-emerald)] flex items-center gap-2"><i class="fa-solid fa-circle-question"></i> MANUAL UPDATE SYSTEM COMMAND</h3>
+                <h3 class="font-tech text-sm font-black text-emerald-400 flex items-center gap-2"><i class="fa-solid fa-circle-question"></i> MANUAL UPDATE SYSTEM COMMAND</h3>
                 <button onclick="closeSystemHelp()" class="text-[var(--text-muted)] hover:text-rose-500 text-xl"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <div class="space-y-3 font-sans text-xs leading-relaxed">
@@ -502,10 +623,6 @@
                 <p class="bg-[var(--panel-inner)] p-3 rounded-xl border border-[var(--border-color)]">
                     <strong class="text-[var(--accent-purple)] font-mono block mb-1">2. INTERPRETASI MATRIKS ESTIMASI</strong>
                     Matriks presentasi dampak dipindahkan ke panel kanan bawah. Nilai **Potensi Hujan** dan **Potensi Kekeringan** dikomparasi secara cerdas dengan sirkulasi angin Windy—di mana jika angin Muson Timur bertiup (Kemarau), potensi curah hujan otomatis terhitung mengecil secara akurat.
-                </p>
-                <p class="bg-[var(--panel-inner)] p-3 rounded-xl border border-[var(--border-color)]">
-                    <strong class="text-[var(--accent-amber)] font-mono block mb-1">3. INTEGRASI ALARM SIRINE & TEST MODUL</strong>
-                    Sistem dilengkapi dengan tombol **TEST** untuk memicu sinyal tiruan bunyi sirine, serta tombol **MUTED** untuk isolasi pengaman audio sirine sewaktu-waktu di ruang kontrol.
                 </p>
             </div>
         </div>
@@ -550,6 +667,16 @@
         let isSirenRinging = false;
         let isSirenMutedManual = false; 
 
+        let bmkgLiveCountdown = 60;
+        let bmkgLiveIntervalId = null;
+        
+        let activeEpicenterMarker = null;
+        let mapShockwaveCircle = null;
+
+        // --- SISTEM ENGINE LOGIKA SCREENSAVER ---
+        let idleTimerToken = null;
+        const idleThresholdLimit = 30000; // Aktif otomatis dalam 30 Detik Tanpa Aktivitas
+
         const exactWayApuCoordinates = [-3.554025, 126.839933];
         const stasiunPosData = {
             "hulu": [-3.5821, 126.8123, "AWLR HULU (1)"],
@@ -564,15 +691,17 @@
             terrain: 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png'
         };
 
-        const arsipGempaMegathrustMaluku = [
-            { loc: "ZONA MEGATHRUST LAUT BANDA UTARA", mag: "8.5 SR", time: "Riwayat Sejarah Tahun 1938", depth: "25", coords: "Potensi Tsunami Masif", pot: "Estimasi Kekuatan Maksimum Zona: 7.9 M" },
-            { loc: "ZONA MEGATHRUST LAUT BANDA SELATAN", mag: "7.4 SR", time: "Riwayat Sejarah Maluku BD (2021)", depth: "15", coords: "Aktif Tektonik", pot: "Estimasi Kekuatan Maksimum Zona: 7.4 M" },
-            { loc: "ZONA FILIPINA - MALUKU (TALAUD)", mag: "7.1 SR", time: "Riwayat Sejarah Gempa Bumi (2021)", depth: "33", coords: "Jalur Subduksi Aktif", pot: "Estimasi Kekuatan Maksimum Zona: 8.2 M" }
+        const arsipGempaKatalistikIndonesia = [
+            { loc: "ZONA MEGATHRUST LAUT BANDA UTARA", mag: "8.5 SR", time: "Riwayat Sejarah Tahun 1938 [tsunami]", depth: "25 km", coords: [-3.75, 127.50], fault: "Thrust Fault", pot: "Estimasi Kekuatan Maksimum Zona: 7.9 M" },
+            { loc: "ZONA MEGATHRUST LAUT BANDA SELATAN", mag: "7.4 SR", time: "Riwayat Sejarah Maluku BD (2021)", depth: "15 km", coords: [-7.20, 129.50], fault: "Thrust Fault", pot: "Estimasi Kekuatan Maksimum Zona: 7.4 M" },
+            { loc: "SESAR BOBOT SEISMIC REGIONAL", mag: "7.5 M", time: "Patahan Aktif Kontinu", depth: "10 km", coords: [-3.22, 130.22], fault: "Strike-Slip Patahan", pot: "Kategori Garis Sesar Terkonfirmasi (0.5mm/yr)" },
+            { loc: "SESAR MANIPA TEKTONIK SULA", mag: "7.4 M", time: "Patahan Aktif Jalur Laut", depth: "15 km", coords: [-3.25, 127.35], fault: "Thrust Sesar", pot: "Kategori Pergerakan Aktif Kompresif Regional" },
+            { loc: "ZONA FILIPINA - MALUKU (TALAUD)", mag: "7.1 SR", time: "Riwayat Sejarah Gempa Bumi (2021)", depth: "33 km", coords: [4.10, 126.80], fault: "Jalur Subduksi Aktif", pot: "Estimasi Kekuatan Maksimum Zona: 8.2 M" }
         ];
 
         document.addEventListener("DOMContentLoaded", () => {
             const userAgent = navigator.userAgent;
-            let nodeIdentification = "STATION_NODE_AUTO";
+            let nodeIdentification = "[Inisial Identifikasi Otomatis]";
             if (userAgent.indexOf("Windows") !== -1) nodeIdentification = "SYS_WIN_NODE_X64";
             else if (userAgent.indexOf("Macintosh") !== -1) nodeIdentification = "SYS_MAC_DARWIN";
             else if (userAgent.indexOf("Linux") !== -1) nodeIdentification = "LINUX_CORE_STATION";
@@ -580,15 +709,16 @@
 
             initInteractiveMap();
             initLiveSystemClock();
-            fetchRealtimeBmkgEarthquake();
-            runLiveClimateEngineCalculations();
+            fetchRealtimeBmkgEarthquake(); 
+            initRealtimeApiSyncTimer();    
+            renderHistoricalCatalogPanel();
+            initScreensaverWatchdog(); // Jalankan Pemantau Idle Sinyal
 
             setInterval(() => {
                 runLiveClimateEngineCalculations();
             }, 5000);
         });
 
-        // 1. DYNAMIC AUTO-ZONE TIME DETECTOR ENGINE (WIB, WITA, WIT)
         function initLiveSystemClock() {
             function updateClock() {
                 const now = new Date();
@@ -599,74 +729,209 @@
                 let tgl = String(now.getDate()).padStart(2, '0');
                 let bln = opsiBulan[now.getMonth()];
                 let thn = now.getFullYear();
-                
                 let jam = String(now.getHours()).padStart(2, '0');
                 let mnt = String(now.getMinutes()).padStart(2, '0');
                 let dtk = String(now.getSeconds()).padStart(2, '0');
                 
-                // Mendeteksi Offset Waktu Internasional untuk menentukan Label Indonesia (WIB/WITA/WIT)
                 let offsetMinutes = now.getTimezoneOffset(); 
                 let labelZonaWaktu = "Waktu Lokal"; 
                 
-                // Karena getTimezoneOffset mengembalikan nilai negatif untuk zona timur UTC:
-                // UTC+7 (WIB) = -420, UTC+8 (WITA) = -480, UTC+9 (WIT) = -540
-                if (offsetMinutes === -420) {
-                    labelZonaWaktu = "WIB";
-                } else if (offsetMinutes === -480) {
-                    labelZonaWaktu = "WITA";
-                } else if (offsetMinutes === -540) {
-                    labelZonaWaktu = "WIT";
-                } else {
-                    // Jika user menggunakan settingan kustom di luar Indonesia, generate string zona standar GMT/UTC
-                    let totalHours = Math.abs(offsetMinutes / 60);
-                    let sign = offsetMinutes > 0 ? "-" : "+";
-                    labelZonaWaktu = `GMT${sign}${totalHours}`;
-                }
+                if (offsetMinutes === -420) labelZonaWaktu = "WIB";
+                else if (offsetMinutes === -480) labelZonaWaktu = "WITA";
+                else if (offsetMinutes === -540) labelZonaWaktu = "WIT";
                 
-                document.getElementById("headerLiveClock").innerText = `${hari}, ${tgl} ${bln} ${thn} | ${jam}:${mnt}:${dtk} ${labelZonaWaktu}`;
+                const formatLengkap = `${hari}, ${tgl} ${bln} ${thn} | ${jam}:${mnt}:${dtk} ${labelZonaWaktu}`;
+                
+                // Distribusi ke Header Utama
+                document.getElementById("headerLiveClock").innerText = formatLengkap;
+                
+                // Distribusi ke Monitor Screensaver
+                const tglHoloNode = document.getElementById("screensaverDate");
+                const jamHoloNode = document.getElementById("screensaverTime");
+                if(tglHoloNode) tglHoloNode.innerText = `${hari}, ${tgl} ${bln.toUpperCase()} ${thn}`;
+                if(jamHoloNode) jamHoloNode.innerText = `${jam}:${mnt}:${dtk}`;
             }
             updateClock();
             setInterval(updateClock, 1000);
         }
 
-        function toggleFloatingWidget(mode) {
-            const widget = document.getElementById("floatingMalukuEarthquakeWidget");
-            const title = document.getElementById("floatingWidgetTitle");
-            const content = document.getElementById("floatingWidgetContent");
+        // --- SISTEM HANDLER UNTUK MODUL INTERAKSI IDLE/SCREENSAVER ---
+        function initScreensaverWatchdog() {
+            resetIdleWatchdogTimer();
             
-            widget.classList.remove("hidden");
-            content.innerHTML = "";
+            // Pasang Listener Aktivitas Operator
+            window.addEventListener("mousemove", resetIdleWatchdogTimer, true);
+            window.addEventListener("mousedown", resetIdleWatchdogTimer, true);
+            window.addEventListener("keypress", resetIdleWatchdogTimer, true);
+            window.addEventListener("touchstart", resetIdleWatchdogTimer, true);
+            window.addEventListener("scroll", resetIdleWatchdogTimer, true);
+        }
 
-            if (mode === 'live') {
-                title.innerText = "BMKG REAL-TIME SEISMIC FEED (MALUKU)";
-                content.innerHTML = `
-                    <div class="border-l-2 border-emerald-500 pl-2 py-0.5">
-                        <div class="text-white font-bold">[LIVE] Saparua Maluku Tengah</div>
-                        <div class="text-[10px] text-slate-400">Mag: <span class="text-emerald-400">3.4 SR</span> | Kedalaman: 10 km</div>
-                        <div class="text-[9px] text-slate-500">Update Otomatis Baru Saja</div>
-                    </div>
-                    <div class="border-l-2 border-cyan-500 pl-2 py-0.5">
-                        <div class="text-white font-bold">[LIVE] Wilayah Laut Banda Selatan</div>
-                        <div class="text-[10px] text-slate-400">Mag: <span class="text-cyan-400">4.1 SR</span> | Kedalaman: 140 km</div>
-                    </div>
-                `;
-            } else if (mode === 'history') {
-                title.innerText = "ARSIP GEMPA ZONA MEGATHRUST KEKUATAN TINGGI";
-                arsipGempaMegathrustMaluku.forEach(item => {
-                    content.innerHTML += `
-                        <div class="border-l-2 border-amber-500 pl-2 py-1 bg-slate-900/60 rounded">
-                            <div class="text-amber-400 font-bold">${item.loc}</div>
-                            <div class="text-[10px] text-white">Riwayat Kekuatan: <span class="text-red-400 font-black">${item.mag}</span></div>
-                            <div class="text-[10px] text-slate-400">${item.time} | ${item.coords}</div>
-                            <div class="text-[9px] text-slate-500">${item.pot}</div>
-                        </div>
-                    `;
-                });
+        function resetIdleWatchdogTimer() {
+            // Sembunyikan screensaver jika sedang aktif
+            const screensaver = document.getElementById("hologramScreensaver");
+            if (screensaver && !screensaver.classList.contains("hidden")) {
+                screensaver.classList.add("hidden");
+                screensaver.classList.remove("opacity-100", "visibility-visible");
+                screensaver.classList.add("opacity-0", "visibility-hidden");
+                
+                // Kembalikan layout dashboard utama
+                document.getElementById("mainDashboardInterface").classList.remove("hidden");
+                if(mapInstance) mapInstance.invalidateSize();
+            }
+
+            clearTimeout(idleTimerToken);
+            idleTimerToken = setTimeout(awakenHologramScreensaverMode, idleThresholdLimit);
+        }
+
+        function awakenHologramScreensaverMode() {
+            // Jangan aktifkan screensaver jika sedang dalam mode Peta Layar Penuh
+            const fsWrapper = document.getElementById("gisFullScreenWrapper");
+            if (fsWrapper && !fsWrapper.classList.contains("hidden")) return;
+
+            const screensaver = document.getElementById("hologramScreensaver");
+            if (screensaver) {
+                document.getElementById("mainDashboardInterface").classList.add("hidden");
+                screensaver.classList.remove("hidden", "opacity-0", "visibility-hidden");
+                screensaver.classList.add("opacity-100", "visibility-visible");
             }
         }
 
-        function closeFloatingWidget() {
-            document.getElementById("floatingMalukuEarthquakeWidget").classList.add("hidden");
+        function toggleFloatingContainerWidget(widgetId) {
+            const el = document.getElementById(widgetId);
+            const isHidden = el.classList.contains("hidden");
+            document.getElementById("bmkgLiveWidget").classList.add("hidden");
+            document.getElementById("sejarahGempaWidget").classList.add("hidden");
+            if (isHidden) el.classList.remove("hidden");
+        }
+
+        function renderHistoricalCatalogPanel() {
+            const container = document.getElementById("historicalFeedContainer");
+            container.innerHTML = "";
+
+            arsipGempaKatalistikIndonesia.forEach(h => {
+                const card = document.createElement("div");
+                card.className = "p-4 bg-[#040a17] border-2 border-slate-800 hover:border-[#f59e0b] rounded-xl cursor-pointer transition-all shadow-md select-none group";
+                card.innerHTML = `
+                    <div class="flex justify-between items-center border-b border-slate-800 pb-2 mb-2">
+                        <span class="text-[#f59e0b] font-tech text-xs md:text-sm font-black tracking-wide group-hover:text-yellow-400 transition-colors uppercase">${h.loc}</span>
+                        <span class="text-white font-mono text-sm md:text-base font-black px-2 py-0.5 bg-amber-950 border border-amber-500 rounded">${h.mag}</span>
+                    </div>
+                    <p class="text-slate-200 text-xs md:text-sm font-bold leading-relaxed mb-2">${h.time} | Mekanisme Sesar: <span class="text-cyan-400">${h.fault}</span></p>
+                    <p class="text-[11px] md:text-xs text-slate-400 font-medium">${h.pot} | Kedalaman: ${h.depth}</p>
+                    <div class="mt-2 text-[10px] text-amber-500 font-black text-right font-tech tracking-widest uppercase group-hover:animate-pulse">📌 PLOT KE PETA & AWAKEN ALARM Sirine &gt;</div>
+                `;
+
+                card.onclick = () => {
+                    if (mapInstance) {
+                        mapInstance.flyTo(h.coords, 8, { animate: true, duration: 2.0 });
+                    }
+                    
+                    if (activeEpicenterMarker) mapInstance.removeLayer(activeEpicenterMarker);
+                    if (mapShockwaveCircle) mapInstance.removeLayer(mapShockwaveCircle);
+
+                    activeEpicenterMarker = L.circleMarker(h.coords, {
+                        radius: 12, fillColor: '#f59e0b', color: '#ffffff', weight: 2, fillOpacity: 0.9, className: 'pulse-epicenter'
+                    }).addTo(mapInstance).bindTooltip(`<span class='font-mono font-bold text-xs text-black'>${h.loc} (${h.mag})</span>`, { sticky: true });
+
+                    mapShockwaveCircle = L.circle(h.coords, {
+                        radius: 180000, color: '#f59e0b', fillColor: '#fbbf24', fillOpacity: 0.15, weight: 1.5
+                    }).addTo(mapInstance);
+
+                    isSirenMutedManual = false;
+                    document.getElementById("btnManualSiren").innerHTML = `<i class="fa-solid fa-volume-high"></i> UNMUTED`;
+                    triggerAutomaticWarningSystem(true);
+
+                    document.getElementById("eqLocation").innerText = `[ARSIP SIMULASI] ${h.loc}`;
+                    document.getElementById("eqMag").innerText = h.mag.replace(" SR","").replace(" M","");
+                    document.getElementById("eqDepth").innerText = h.depth.replace(" km","");
+                    document.getElementById("eqTime").innerText = h.time;
+                    document.getElementById("eqCoords").innerText = `${h.coords[0]}, ${h.coords[1]}`;
+                    document.getElementById("eqPotensi").innerText = `${h.pot} - Audio Sirine AWS Terpicu Otomatis.`;
+                };
+
+                container.appendChild(card);
+            });
+        }
+
+        function initRealtimeApiSyncTimer() {
+            if (bmkgLiveIntervalId) clearInterval(bmkgLiveIntervalId);
+            
+            async function fetchLiveMkgFeeds() {
+                const liveContainer = document.getElementById("bmkgFeedContainer");
+                try {
+                    const res = await fetch("https://data.bmkg.go.id/DataMKG/TEWS/gempaterkini.json");
+                    const data = await res.json();
+                    const liveGempaList = data.Infogempa.gempa;
+
+                    liveContainer.innerHTML = "";
+                    liveGempaList.forEach(g => {
+                        const item = document.createElement("div");
+                        item.className = "p-3 bg-[#040a17] border border-slate-800 hover:border-cyan-400 rounded-xl cursor-pointer transition-colors shadow-sm";
+                        item.innerHTML = `
+                            <span class="text-cyan-400 block font-tech font-black text-xs uppercase mb-1">⚡ GEMPA ${g.Wilayah}</span>
+                            <div class="leading-normal text-xs font-mono font-bold text-slate-300">
+                                Kekuatan: <span class="text-rose-400 font-black text-sm">${g.Magnitude} M</span> | Kedalaman: ${g.Kedalaman}<br>
+                                Waktu: ${g.Tanggal} - ${g.Jam}<br>
+                                <span class="text-amber-500 font-sans text-[11px]">Diseminasi: ${g.Potensi || "Tidak Berpotensi Tsunami"}</span>
+                            </div>
+                        `;
+
+                        item.onclick = () => {
+                            const pointArr = g.Coordinates.split(",");
+                            const targetLatLng = [parseFloat(pointArr[0]), parseFloat(pointArr[1])];
+                            
+                            if (mapInstance) {
+                                mapInstance.flyTo(targetLatLng, 7, { animate: true, duration: 2.0 });
+                            }
+
+                            if (activeEpicenterMarker) mapInstance.removeLayer(activeEpicenterMarker);
+                            if (mapShockwaveCircle) mapInstance.removeLayer(mapShockwaveCircle);
+
+                            activeEpicenterMarker = L.circleMarker(targetLatLng, {
+                                radius: 12, fillColor: '#ef4444', color: '#ffffff', weight: 2, fillOpacity: 0.9, className: 'pulse-epicenter'
+                            }).addTo(mapInstance);
+
+                            mapShockwaveCircle = L.circle(targetLatLng, {
+                                radius: 200000, color: '#ef4444', fillColor: '#f87171', fillOpacity: 0.12, weight: 1.5
+                            }).addTo(mapInstance);
+
+                            activeEpicenterMarker.bindPopup(`
+                                <div class="font-mono text-xs p-1 text-slate-900 leading-normal">
+                                    <b class="text-red-600 block uppercase mb-1"><i class="fa-solid fa-triangle-exclamation"></i> BMKG LIVE FEEDS</b>
+                                    <b>Lokasi:</b> ${g.Wilayah}<br>
+                                    <b>Koordinat:</b> ${g.Coordinates}<br>
+                                    <b>Kekuatan:</b> <span class="text-red-600 font-bold">${g.Magnitude} M</span><br>
+                                    <b>Prakiraan Dampak:</b> <span class="text-amber-600 font-bold">${g.Potensi || "Tidak berpotensi tsunami"}</span>
+                                </div>
+                            `).openPopup();
+
+                            document.getElementById("eqLocation").innerText = g.Wilayah;
+                            document.getElementById("eqMag").innerText = g.Magnitude;
+                            document.getElementById("eqDepth").innerText = g.Kedalaman.replace(" km", "");
+                            document.getElementById("eqTime").innerText = `${g.Tanggal} | ${g.Jam}`;
+                            document.getElementById("eqCoords").innerText = g.Coordinates;
+                            document.getElementById("eqPotensi").innerText = g.Potensi || "Tidak berpotensi tsunami";
+                        };
+
+                        liveContainer.appendChild(item);
+                    });
+                } catch (e) {
+                    liveContainer.innerHTML = `<div class='text-center py-4 text-xs font-bold text-red-400'>Koneksi gagal atau limitasi akses gateway API BMKG. Menjaga retensi data lokal node...</div>`;
+                }
+            }
+
+            fetchLiveMkgFeeds();
+            bmkgLiveCountdown = 60;
+            bmkgLiveIntervalId = setInterval(() => {
+                bmkgLiveCountdown--;
+                document.getElementById("liveApiTimer").innerText = `${bmkgLiveCountdown}s`;
+                if (bmkgLiveCountdown <= 0) {
+                    bmkgLiveCountdown = 60;
+                    fetchRealtimeBmkgEarthquake(); 
+                    fetchLiveMkgFeeds();           
+                }
+            }, 1000);
         }
 
         function initInteractiveMap() {
@@ -984,7 +1249,7 @@
                 const normalized = promptValue.toLowerCase();
 
                 if(normalized.includes("analisis") || normalized.includes("risalah") || normalized.includes("hidrologi")) {
-                    botReplyText = `**RISALAH COUPLING MATRIKS HIDROLOGI:**<br>Data telemetri mencatat status bendungan normal. Nilai estimasi potensi hujan terasimilasi otomatis dengan Windy regional Maluku.`;
+                    botReplyText = `**RISALAH COURIX MATRIKS HIDROLOGI:**<br>Data telemetri mencatat status bendungan normal. Nilai estimasi potensi hujan terasimilasi otomatis dengan Windy regional Maluku.`;
                 } else if(normalized.includes("creator") || normalized.includes("pengembang") || normalized.includes("hartadi")) {
                     botReplyText = `Sistem ini dikembangkan secara eksklusif oleh **Mohamad Hartadi & Keluarga**. Kontak korespondensi resmi, tautan WhatsApp, dan portal blog pengembang tercantum pada panel Kredit.`;
                 } else {
